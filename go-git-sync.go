@@ -15,8 +15,6 @@ func SyncFunction(c *cli.Context) error {
 
 func main() {
 
-	var sourceUrl string
-	var syncScript string
 	app := &cli.App{
 		Name:                 "go-git-sync",
 		Usage:                "Simple tool to sync content from Git on change",
@@ -24,18 +22,16 @@ func main() {
 		Version:              "v0.0.1",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
-				Name:        "source",
-				Aliases:     []string{"s"},
-				Usage:       "Source Git URL to sync from",
-				Destination: &sourceUrl,
-				Required:    true,
+				Name:     "source",
+				Aliases:  []string{"s"},
+				Usage:    "Source Git URL to sync from",
+				Required: true,
 			},
 			&cli.StringFlag{
-				Name:        "script",
-				Aliases:     []string{"r"},
-				Usage:       "Script to run on change",
-				Destination: &syncScript,
-				Required:    true,
+				Name:     "script",
+				Aliases:  []string{"r"},
+				Usage:    "Script to run on change",
+				Required: true,
 			},
 		},
 		Commands: []*cli.Command{
