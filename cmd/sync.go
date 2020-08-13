@@ -18,6 +18,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/jmoeser/go-git-sync/git"
 	"github.com/spf13/cobra"
 )
 
@@ -31,6 +32,8 @@ var syncCmd = &cobra.Command{
 	Long:  `Sync changes from specified Git source repo using the command specified`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("sync called", source, syncCommand)
+		checkedOutRepo := git.Checkout(source)
+		fmt.Println(checkedOutRepo)
 	},
 }
 
