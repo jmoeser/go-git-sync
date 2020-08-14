@@ -31,7 +31,8 @@ var syncCmd = &cobra.Command{
 	Long:  `Sync changes from specified Git source repo using the command specified`,
 	Run: func(cmd *cobra.Command, args []string) {
 		log.Debug().Msgf("sync called - %s %s", source, syncCommand)
-		checkedOutRepo := git.Checkout(source)
+		tempDir := git.GetTempDir()
+		checkedOutRepo := git.Checkout(source, tempDir)
 		log.Debug().Msg(checkedOutRepo)
 	},
 }
