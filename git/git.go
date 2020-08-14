@@ -1,18 +1,17 @@
 package git
 
 import (
-	"fmt"
 	"io/ioutil"
-	"log"
 	"os"
 
 	"github.com/go-git/go-git/v5"
+	"github.com/rs/zerolog/log"
 )
 
 func Checkout(url string) string {
 	dir, err := ioutil.TempDir(os.TempDir(), "go-git-sync-")
 	if err != nil {
-		log.Fatal(err)
+		log.Error().Err(err)
 	}
 
 	// https://pkg.go.dev/github.com/go-git/go-git/v5?tab=doc#CloneOptions
@@ -22,13 +21,13 @@ func Checkout(url string) string {
 	})
 
 	if err != nil {
-		fmt.Printf("\x1b[31;1m%s\x1b[0m\n", fmt.Sprintf("error: %s", err))
+		log.Error().Err(err)
 		os.RemoveAll(dir)
 		os.Exit(1)
 	}
 
 	ref, err := r.Head()
-	fmt.Println("Checked out", ref.Hash())
+	log.Debug().Msgf("Checked out %s", ref.Hash())
 
 	return dir
 }

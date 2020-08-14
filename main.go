@@ -15,8 +15,18 @@ limitations under the License.
 */
 package main
 
-import "github.com/jmoeser/go-git-sync/cmd"
+import (
+	"os"
+
+	"github.com/rs/zerolog/log"
+
+	"github.com/jmoeser/go-git-sync/cmd"
+	"github.com/rs/zerolog"
+)
 
 func main() {
+	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
+	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stdout})
+
 	cmd.Execute()
 }
