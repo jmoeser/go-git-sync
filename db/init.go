@@ -22,11 +22,13 @@ func DatabaseInit(databasePath string) {
 }
 
 func createTables(db *sql.DB) {
+
 	syncStatusTableSQL := `CREATE TABLE syncStatus (
 		"id" integer NOT NULL PRIMARY KEY AUTOINCREMENT,
 		"repo" TEXT,
 		"hash" TEXT,
-		"destination" TEXT
+		"destination" TEXT,
+		"syncedAt" DATETIME DEFAULT CURRENT_TIMESTAMP
 	  );`
 
 	log.Debug().Msg("Creating syncStatus database")
@@ -34,6 +36,7 @@ func createTables(db *sql.DB) {
 	if err != nil {
 		log.Error().Err(err)
 	}
+
 	statement.Exec()
 	log.Debug().Msg("Created syncStatus database")
 }
