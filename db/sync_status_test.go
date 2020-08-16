@@ -11,11 +11,12 @@ import (
 func TestUpdateSyncStatus(t *testing.T) {
 	dbPath := "ggs.db"
 	hash := "5ee116a"
+	repo := "https://github.com/jmoeser/go-git-sync.git"
 
 	db.DatabaseInit(dbPath)
 	defer os.Remove(dbPath)
 
-	db.UpdateSyncStatus(dbPath, "https://github.com/jmoeser/go-git-sync.git", hash, "http://consul")
+	db.UpdateSyncStatus(dbPath, repo, hash, "http://consul")
 
 	type SyncStatus struct {
 		Repo        string
@@ -35,6 +36,9 @@ func TestUpdateSyncStatus(t *testing.T) {
 	}
 
 	rows, err := statement.Query(hash)
+	if err != nil {
+		t.Error(err)
+	}
 	defer rows.Close()
 
 	for rows.Next() {
@@ -43,6 +47,11 @@ func TestUpdateSyncStatus(t *testing.T) {
 			t.Error(err)
 		}
 		SyncStatuses = append(SyncStatuses, s)
+	}
+
+	syncStatus := SyncStatuses[0]
+	if syncStatus.Repo != repo {
+		t.Error("Repo is not correct!")
 	}
 
 }
