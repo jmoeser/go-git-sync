@@ -12,7 +12,7 @@ func DatabaseInit(databasePath string) {
 	log.Debug().Msg("Creating sqlite database")
 	file, err := os.Create(databasePath)
 	if err != nil {
-		log.Error().Err(err)
+		log.Fatal().Err(err)
 	}
 	file.Close()
 
@@ -34,12 +34,12 @@ func createTables(db *sql.DB) {
 	log.Debug().Msg("Creating syncStatus database")
 	statement, err := db.Prepare(syncStatusTableSQL)
 	if err != nil {
-		log.Error().Err(err)
+		log.Fatal().Err(err)
 	}
 
 	_, err = statement.Exec()
 	if err != nil {
-		log.Error().Err(err)
+		log.Fatal().Err(err)
 	}
 
 	log.Debug().Msg("Created syncStatus database")
