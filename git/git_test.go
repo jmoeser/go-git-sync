@@ -1,4 +1,4 @@
-package git
+package git_test
 
 import (
 	"bufio"
@@ -6,11 +6,13 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+
+	"github.com/jmoeser/go-git-sync/git"
 )
 
 func TestCheckout(t *testing.T) {
-	dir := GetTempDir()
-	checkedOutDir := Checkout("https://github.com/jmoeser/terraform-modules", dir)
+	dir := git.GetTempDir()
+	checkedOutDir := git.Checkout("https://github.com/jmoeser/terraform-modules", dir)
 
 	defer os.RemoveAll(checkedOutDir)
 
