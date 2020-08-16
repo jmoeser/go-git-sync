@@ -37,6 +37,10 @@ func createTables(db *sql.DB) {
 		log.Error().Err(err)
 	}
 
-	statement.Exec()
+	_, err = statement.Exec()
+	if err != nil {
+		log.Error().Err(err)
+	}
+
 	log.Debug().Msg("Created syncStatus database")
 }

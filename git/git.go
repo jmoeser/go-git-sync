@@ -34,6 +34,9 @@ func Checkout(url string, checkoutDir string) string {
 	}
 
 	ref, err := r.Head()
+	if err != nil {
+		log.Error().Err(err)
+	}
 	log.Debug().Msgf("Checked out %s", ref.Hash())
 
 	return checkoutDir

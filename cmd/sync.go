@@ -43,6 +43,12 @@ func init() {
 	syncCmd.Flags().StringVarP(&source, "source", "s", "", "Source Git URL")
 	syncCmd.Flags().StringVarP(&syncCommand, "cmd", "c", "", "Command to run when change detected in Git")
 
-	syncCmd.MarkFlagRequired("source")
-	syncCmd.MarkFlagRequired("cmd")
+	err := syncCmd.MarkFlagRequired("source")
+	if err != nil {
+		log.Error().Err(err)
+	}
+	err = syncCmd.MarkFlagRequired("cmd")
+	if err != nil {
+		log.Error().Err(err)
+	}
 }
