@@ -53,5 +53,7 @@ func TestUpdateSyncStatus(t *testing.T) {
 	if syncStatus.Repo != repo {
 		t.Error("Repo is not correct!")
 	}
-
+	if syncStatus.Hash != hash {
+		t.Error("Hash is not correct!")
+	}
 }
