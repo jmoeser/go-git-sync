@@ -12,6 +12,15 @@ jobs:
     strategy:
       matrix:
         go: [ '1.14', '1.15' ]
+
+    services:
+      consul:
+        image: consul:1.8.3
+        env:
+          CONSUL_BIND_INTERFACE: eth0
+        ports:
+          - 8500:8500/tcp
+
     steps:
     - uses: actions/checkout@v2
 

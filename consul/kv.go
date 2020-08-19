@@ -13,6 +13,7 @@ func ConsulPublishKV(key string, key_values map[string]string) {
 	client, err := api.NewClient(api.DefaultConfig())
 	if err != nil {
 		log.Fatal().Err(err)
+		return
 	}
 
 	log.Debug().Msg("Connected to Consul...")
