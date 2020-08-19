@@ -15,7 +15,10 @@ func TestConsulPublishKV(t *testing.T) {
 	var test_data = map[string]string{"Pink": "Flamingo", "Yellow": "Elephant"}
 	var test_key = "animals"
 
-	consul_kv.ConsulPublishKV(test_key, test_data)
+	err := consul_kv.ConsulPublishKV(test_key, test_data)
+	if err != nil {
+		t.Error(err)
+	}
 
 	client, err := api.NewClient(api.DefaultConfig())
 	if err != nil {
