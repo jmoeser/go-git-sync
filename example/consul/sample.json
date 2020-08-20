@@ -1,0 +1,11 @@
+{
+    "Yellow": "Llama",
+    "Bears": 3,
+    "Goats": [
+        "Billy",
+        "Bobby"
+    ],
+    "Reindeer": {
+        "Sled": false
+    }
+}
