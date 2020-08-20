@@ -41,13 +41,23 @@ func init() {
 	rootCmd.AddCommand(syncCmd)
 
 	syncCmd.Flags().StringVarP(&source, "source", "s", "", "Source Git URL")
-	syncCmd.Flags().StringVarP(&syncCommand, "cmd", "c", "", "Command to run when change detected in Git")
+	syncCmd.Flags().StringVarP(&syncCommand, "file", "f", "", "File path in the Git repo")
+	syncCmd.Flags().StringVarP(&syncCommand, "consul", "c", "", "Consul URL")
+	syncCmd.Flags().StringVarP(&syncCommand, "destination", "d", "", "Destination path to sync to in Consul")
 
 	err := syncCmd.MarkFlagRequired("source")
 	if err != nil {
 		log.Error().Err(err)
 	}
-	err = syncCmd.MarkFlagRequired("cmd")
+	err = syncCmd.MarkFlagRequired("file")
+	if err != nil {
+		log.Error().Err(err)
+	}
+	err = syncCmd.MarkFlagRequired("consul")
+	if err != nil {
+		log.Error().Err(err)
+	}
+	err = syncCmd.MarkFlagRequired("destination")
 	if err != nil {
 		log.Error().Err(err)
 	}
