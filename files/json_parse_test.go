@@ -15,7 +15,10 @@ func TestParseJson(t *testing.T) {
 	}
 
 	var result map[string]interface{}
-	json.Unmarshal([]byte(byteValue), &result)
+	err = json.Unmarshal([]byte(byteValue), &result)
+	if err != nil {
+		t.Error(err)
+	}
 
 	fmt.Println(result)
 }
