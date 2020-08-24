@@ -16,13 +16,15 @@ limitations under the License.
 package cmd
 
 import (
-	"github.com/jmoeser/go-git-sync/git"
+	"github.com/jmoeser/go-git-sync/api"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 )
 
 var source string
-var syncCommand string
+var filePath string
+var consulServer string
+var destinationPath string
 
 // syncCmd represents the sync command
 var syncCmd = &cobra.Command{
@@ -30,10 +32,9 @@ var syncCmd = &cobra.Command{
 	Short: "Sync changes from Git using the specified command",
 	Long:  `Sync changes from specified Git source repo using the command specified`,
 	Run: func(cmd *cobra.Command, args []string) {
-		log.Debug().Msgf("sync called - %s %s", source, syncCommand)
-		tempDir := git.GetTempDir()
-		checkedOutRepo := git.Checkout(source, tempDir)
-		log.Debug().Msg(checkedOutRepo)
+		if err := api.RunConsulSync(source, filePath, consulServer, destinationPath); err != nil {
+			log.Error().Err(err)
+		}
 	},
 }
 
@@ -41,9 +42,9 @@ func init() {
 	rootCmd.AddCommand(syncCmd)
 
 	syncCmd.Flags().StringVarP(&source, "source", "s", "", "Source Git URL")
-	syncCmd.Flags().StringVarP(&syncCommand, "file", "f", "", "File path in the Git repo")
-	syncCmd.Flags().StringVarP(&syncCommand, "consul", "c", "", "Consul URL")
-	syncCmd.Flags().StringVarP(&syncCommand, "destination", "d", "", "Destination path to sync to in Consul")
+	syncCmd.Flags().StringVarP(&filePath, "file", "f", "", "File path in the Git repo")
+	syncCmd.Flags().StringVarP(&consulServer, "consul", "c", "", "Consul URL")
+	syncCmd.Flags().StringVarP(&destinationPath, "destination", "d", "", "Destination path to sync to in Consul")
 
 	err := syncCmd.MarkFlagRequired("source")
 	if err != nil {

@@ -1,15 +1,15 @@
-package json_parse_test
+package files_test
 
 import (
 	"encoding/json"
 	"fmt"
 	"testing"
 
-	json_parse "github.com/jmoeser/go-git-sync/files"
+	"github.com/jmoeser/go-git-sync/files"
 )
 
 func TestParseJson(t *testing.T) {
-	byteValue, err := json_parse.ParseJson("../example/consul/sample.json")
+	byteValue, err := files.ParseJson("../example/consul/sample.json")
 	if err != nil {
 		t.Error(err)
 	}
@@ -24,7 +24,7 @@ func TestParseJson(t *testing.T) {
 }
 
 func TestParseJsonNonExistantFile(t *testing.T) {
-	_, err := json_parse.ParseJson("doesnt_exist.json")
+	_, err := files.ParseJson("doesnt_exist.json")
 	if err == nil {
 		t.Error("Expected an error but none was found")
 	}

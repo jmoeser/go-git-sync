@@ -1,13 +1,11 @@
 package consul
 
 import (
-	"encoding/json"
-
 	"github.com/hashicorp/consul/api"
 	"github.com/rs/zerolog/log"
 )
 
-func PublishKV(key string, key_values map[string]string) error {
+func PublishKV(key string, key_values []byte) error {
 
 	log.Debug().Msgf("Got KV %s", key_values)
 	client, err := api.NewClient(api.DefaultConfig())
@@ -20,18 +18,14 @@ func PublishKV(key string, key_values map[string]string) error {
 
 	kv := client.KV()
 
-	marshal_data, err := json.Marshal(key_values)
-	if err != nil {
-		log.Fatal().Err(err)
-		return err
-	}
-
-	p := &api.KVPair{Key: key, Value: marshal_data}
+	p := &api.KVPair{Key: key, Value: key_values}
 	_, err = kv.Put(p, nil)
 	if err != nil {
 		log.Fatal().Err(err)
 		return err
 	}
+
+	log.Debug().Msg("Published successfully")
 
 	return nil
 

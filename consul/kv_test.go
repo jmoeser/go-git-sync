@@ -15,7 +15,12 @@ func TestPublishKV(t *testing.T) {
 	var test_data = map[string]string{"Pink": "Flamingo", "Yellow": "Elephant"}
 	var test_key = "animals"
 
-	err := consul.PublishKV(test_key, test_data)
+	marshal_data, err := json.Marshal(test_data)
+	if err != nil {
+		t.Error(err)
+	}
+
+	err = consul.PublishKV(test_key, marshal_data)
 	if err != nil {
 		t.Error(err)
 	}

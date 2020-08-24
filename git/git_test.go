@@ -12,9 +12,12 @@ import (
 
 func TestCheckout(t *testing.T) {
 	dir := git.GetTempDir()
-	checkedOutDir := git.Checkout("https://github.com/jmoeser/terraform-modules", dir)
+	defer os.RemoveAll(dir)
 
-	defer os.RemoveAll(checkedOutDir)
+	checkedOutDir, _, err := git.Checkout("https://github.com/jmoeser/terraform-modules", dir)
+	if err != nil {
+		t.Error(err)
+	}
 
 	f, err := os.Open(filepath.Join(checkedOutDir, "README.md"))
 	if err != nil {

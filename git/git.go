@@ -19,7 +19,7 @@ func GetTempDir() string {
 	return dir
 }
 
-func Checkout(url string, checkoutDir string) string {
+func Checkout(url string, checkoutDir string) (string, string, error) {
 
 	// https://pkg.go.dev/github.com/go-git/go-git/v5?tab=doc#CloneOptions
 	r, err := git.PlainClone(checkoutDir, false, &git.CloneOptions{
@@ -30,7 +30,7 @@ func Checkout(url string, checkoutDir string) string {
 	if err != nil {
 		log.Error().Err(err)
 		os.RemoveAll(checkoutDir)
-		os.Exit(1)
+		return "", "", nil
 	}
 
 	ref, err := r.Head()
@@ -39,5 +39,5 @@ func Checkout(url string, checkoutDir string) string {
 	}
 	log.Debug().Msgf("Checked out %s", ref.Hash())
 
-	return checkoutDir
+	return checkoutDir, ref.Hash().String(), nil
 }
