@@ -1,4 +1,4 @@
-package consul_kv_test
+package consul_test
 
 import (
 	"encoding/json"
@@ -7,15 +7,15 @@ import (
 
 	"github.com/hashicorp/consul/api"
 
-	consul_kv "github.com/jmoeser/go-git-sync/consul"
+	"github.com/jmoeser/go-git-sync/consul"
 )
 
-func TestConsulPublishKV(t *testing.T) {
+func TestPublishKV(t *testing.T) {
 
 	var test_data = map[string]string{"Pink": "Flamingo", "Yellow": "Elephant"}
 	var test_key = "animals"
 
-	err := consul_kv.ConsulPublishKV(test_key, test_data)
+	err := consul.PublishKV(test_key, test_data)
 	if err != nil {
 		t.Error(err)
 	}

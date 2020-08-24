@@ -1,4 +1,4 @@
-package consul_kv
+package consul
 
 import (
 	"encoding/json"
@@ -7,7 +7,7 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-func ConsulPublishKV(key string, key_values map[string]string) error {
+func PublishKV(key string, key_values map[string]string) error {
 
 	log.Debug().Msgf("Got KV %s", key_values)
 	client, err := api.NewClient(api.DefaultConfig())
