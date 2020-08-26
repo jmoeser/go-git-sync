@@ -24,7 +24,7 @@ func RunConsulSync(source string, filePath string, consulServer string, destinat
 
 	log.Debug().Msgf("Checked out repo at commit %s", headHash)
 
-	jsonData, err := files.ParseJson(filepath.Join(checkedOutDir, filePath))
+	jsonData, err := files.ParseJsonFile(filepath.Join(checkedOutDir, filePath))
 	if err != nil {
 		log.Fatal().Err(err)
 		return err

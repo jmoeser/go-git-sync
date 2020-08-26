@@ -6,7 +6,7 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-func ParseJson(path string) ([]byte, error) {
+func ParseJsonFile(path string) ([]byte, error) {
 
 	data, err := ioutil.ReadFile(path)
 	if err != nil {

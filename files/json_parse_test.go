@@ -8,8 +8,8 @@ import (
 	"github.com/jmoeser/go-git-sync/files"
 )
 
-func TestParseJson(t *testing.T) {
-	byteValue, err := files.ParseJson("../example/consul/sample.json")
+func TestParseJsonFile(t *testing.T) {
+	byteValue, err := files.ParseJsonFile("../example/consul/sample.json")
 	if err != nil {
 		t.Error(err)
 	}
@@ -24,7 +24,14 @@ func TestParseJson(t *testing.T) {
 }
 
 func TestParseJsonNonExistantFile(t *testing.T) {
-	_, err := files.ParseJson("doesnt_exist.json")
+	_, err := files.ParseJsonFile("doesnt_exist.json")
+	if err == nil {
+		t.Error("Expected an error but none was found")
+	}
+}
+
+func TestParseJsonDirectory(t *testing.T) {
+	_, err := files.ParseJsonFile("../example")
 	if err == nil {
 		t.Error("Expected an error but none was found")
 	}

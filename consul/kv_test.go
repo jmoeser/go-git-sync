@@ -31,6 +31,7 @@ func TestPublishKV(t *testing.T) {
 	}
 
 	kv := client.KV()
+
 	pair, _, err := kv.Get(test_key, nil)
 	if err != nil {
 		t.Error(err)
@@ -45,5 +46,10 @@ func TestPublishKV(t *testing.T) {
 	eq := reflect.DeepEqual(data_from_consul, test_data)
 	if !eq {
 		t.Error("Data in Consul does not much the data we sent the publish function!")
+	}
+
+	_, err = kv.Delete(test_key, nil)
+	if err != nil {
+		t.Error(err)
 	}
 }
