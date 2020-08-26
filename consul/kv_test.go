@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/hashicorp/consul/api"
+	consul_api "github.com/hashicorp/consul/api"
 
 	"github.com/jmoeser/go-git-sync/consul"
 )
@@ -25,7 +25,7 @@ func TestPublishKV(t *testing.T) {
 		t.Error(err)
 	}
 
-	client, err := api.NewClient(api.DefaultConfig())
+	client, err := consul_api.NewClient(consul_api.DefaultConfig())
 	if err != nil {
 		t.Error(err)
 	}
