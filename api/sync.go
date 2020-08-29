@@ -3,6 +3,7 @@ package api
 import (
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/jmoeser/go-git-sync/consul"
 	"github.com/jmoeser/go-git-sync/files"
@@ -24,16 +25,23 @@ func RunConsulSync(source string, filePath string, consulServer string, destinat
 
 	log.Debug().Msgf("Checked out repo at commit %s", headHash)
 
-	jsonData, err := files.ParseJsonFile(filepath.Join(checkedOutDir, filePath))
+	parsedData, err := files.GetFilesAndData(filepath.Join(checkedOutDir, filePath))
 	if err != nil {
 		log.Fatal().Err(err)
 		return err
 	}
 
-	err = consul.PublishKV(destinationKey, jsonData)
-	if err != nil {
-		log.Fatal().Err(err)
-		return err
+	for key, value := range parsedData {
+		//fmt.Println("Key:", key, "Value:", value)
+		destinationKey := strings.Replace(key, checkedOutDir+"/", "", -1)
+		destinationKey = strings.TrimSuffix(destinationKey, filepath.Ext(destinationKey))
+		log.Debug().Msgf("Publishing to %s", destinationKey)
+
+		err = consul.PublishKV(destinationKey, value)
+		if err != nil {
+			log.Fatal().Err(err)
+			return err
+		}
 	}
 
 	log.Debug().Msg("Sync operation completed successfully")

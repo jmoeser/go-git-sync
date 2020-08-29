@@ -45,3 +45,32 @@ func WalkDir(path string) ([]string, error) {
 
 	return fileList, nil
 }
+
+func GetFilesAndData(path string) (map[string][]byte, error) {
+
+	parsedFiles := make(map[string][]byte)
+
+	fileList, err := WalkDir(path)
+	if err != nil {
+		log.Fatal().Err(err)
+		return nil, err
+	}
+
+	for _, name := range fileList {
+
+		switch extension := filepath.Ext(name); extension {
+		case ".json":
+			byteData, err := ParseJsonFile(name)
+			if err != nil {
+				log.Fatal().Err(err)
+				return nil, err
+			}
+			parsedFiles[name] = byteData
+
+		}
+
+	}
+
+	return parsedFiles, nil
+
+}
