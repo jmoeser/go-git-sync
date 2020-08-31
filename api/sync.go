@@ -11,8 +11,11 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-func RunConsulSync(source string, filePath string, consulServer string, destinationKey string) error {
-	log.Debug().Msgf("Begin Consul sync with server %s from file path %s in source repo %s to Consul key %s", consulServer, filePath, source, destinationKey)
+func RunConsulSync(source string, filePath string, consulServer string, destinationPrefix string) error {
+	log.Debug().Msgf("Begin Consul sync with server %s from file path %s in source repo %s to Consul", consulServer, filePath, source)
+	if destinationPrefix != "" {
+		log.Debug().Msgf("Will sync to prefix %s", destinationPrefix)
+	}
 
 	dir := git.GetTempDir()
 	defer os.RemoveAll(dir)
@@ -32,9 +35,13 @@ func RunConsulSync(source string, filePath string, consulServer string, destinat
 	}
 
 	for key, value := range parsedData {
-		//fmt.Println("Key:", key, "Value:", value)
 		destinationKey := strings.Replace(key, checkedOutDir+"/", "", -1)
 		destinationKey = strings.TrimSuffix(destinationKey, filepath.Ext(destinationKey))
+
+		if destinationPrefix != "" {
+			destinationKey = destinationPrefix + "/" + destinationKey
+		}
+
 		log.Debug().Msgf("Publishing to %s", destinationKey)
 
 		err = consul.PublishKV(destinationKey, value)

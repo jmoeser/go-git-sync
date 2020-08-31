@@ -24,7 +24,7 @@ import (
 var source string
 var filePath string
 var consulServer string
-var destinationPath string
+var destinationPrefix string
 
 // syncCmd represents the sync command
 var syncCmd = &cobra.Command{
@@ -32,7 +32,7 @@ var syncCmd = &cobra.Command{
 	Short: "Sync changes from Git using the specified command",
 	Long:  `Sync changes from specified Git source repo using the command specified`,
 	Run: func(cmd *cobra.Command, args []string) {
-		if err := api.RunConsulSync(source, filePath, consulServer, destinationPath); err != nil {
+		if err := api.RunConsulSync(source, filePath, consulServer, destinationPrefix); err != nil {
 			log.Error().Err(err)
 		}
 	},
@@ -44,7 +44,7 @@ func init() {
 	syncCmd.Flags().StringVarP(&source, "source", "s", "", "Source Git URL")
 	syncCmd.Flags().StringVarP(&filePath, "file", "f", "", "File path in the Git repo")
 	syncCmd.Flags().StringVarP(&consulServer, "consul", "c", "", "Consul URL")
-	syncCmd.Flags().StringVarP(&destinationPath, "destination", "d", "", "Destination path to sync to in Consul")
+	syncCmd.Flags().StringVarP(&destinationPrefix, "prefix", "p", "", "Prefix of the path to sync to in Consul")
 
 	err := syncCmd.MarkFlagRequired("source")
 	if err != nil {
@@ -58,8 +58,5 @@ func init() {
 	if err != nil {
 		log.Error().Err(err)
 	}
-	err = syncCmd.MarkFlagRequired("destination")
-	if err != nil {
-		log.Error().Err(err)
-	}
+
 }
