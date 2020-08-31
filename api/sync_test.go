@@ -11,7 +11,7 @@ import (
 
 func TestRunConsulSync(t *testing.T) {
 	source := "https://github.com/jmoeser/go-git-sync.git"
-	file := "example/consul/sample.json"
+	file := "example/consul/sample-json.json"
 	consul := "127.0.0.1:8500"
 
 	err := api.RunConsulSync(source, file, consul, "")
@@ -33,7 +33,7 @@ func TestRunConsulSync(t *testing.T) {
 
 func TestRunConsulSyncWithPrefix(t *testing.T) {
 	source := "https://github.com/jmoeser/go-git-sync.git"
-	file := "example/consul/sample.json"
+	file := "example/consul/sample-json.json"
 	consul := "127.0.0.1:8500"
 	prefix := "test"
 
