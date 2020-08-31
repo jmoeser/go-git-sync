@@ -10,7 +10,7 @@ Will initially aim for Consul and Vault (with a decrypt intermediate step for Va
 Basic usage:
 
 ```
-$ go-git-sync sync -c localhost:8500 -d destination/key \
+$ go-git-sync sync -c localhost:8500 \
     -s https://github.com/jmoeser/go-git-sync.git \
     -f example/consul/sample.json
 ```
