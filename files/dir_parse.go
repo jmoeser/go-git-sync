@@ -1,6 +1,7 @@
 package files
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 
@@ -22,6 +23,14 @@ func isParsableFile(extension string) bool {
 func WalkDir(path string) ([]string, error) {
 
 	fileList := make([]string, 0)
+
+	if _, err := os.Stat(path); err != nil {
+		if os.IsNotExist(err) {
+			log.Error().Msgf("Path does not exist - %s", path)
+			return nil, fmt.Errorf("Path does not exist - %s", path)
+		}
+	}
+
 	log.Debug().Msgf("Will recursively search path %s for files we're looking for", path)
 
 	err := filepath.Walk(path, func(path string, info os.FileInfo, err error) error {
@@ -59,10 +68,10 @@ func GetFilesAndData(path string) (map[string][]byte, error) {
 	for _, name := range fileList {
 
 		switch extension := filepath.Ext(name); extension {
-		case ".json":
-			byteData, err := ParseJsonFile(name)
+		case ".json", ".yaml", ".yml":
+			byteData, err := ParseJsonOrYamlFile(name)
 			if err != nil {
-				log.Fatal().Err(err)
+				log.Error().Err(err)
 				return nil, err
 			}
 			parsedFiles[name] = byteData

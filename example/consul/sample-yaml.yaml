@@ -1,0 +1,12 @@
+---
+
+yellow: llama
+
+bears: 3
+
+goats:
+  - billy
+  - bobby
+
+Reindeer:
+  sled: false

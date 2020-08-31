@@ -53,3 +53,26 @@ func TestRunConsulSyncWithPrefix(t *testing.T) {
 		t.Error(err)
 	}
 }
+
+func TestRunConsulSyncWithDirectory(t *testing.T) {
+	source := "https://github.com/jmoeser/go-git-sync.git"
+	file := "example/consul"
+	consul := "127.0.0.1:8500"
+	prefix := "test"
+
+	err := api.RunConsulSync(source, file, consul, prefix)
+	if err != nil {
+		t.Error(err)
+	}
+
+	client, err := consul_api.NewClient(consul_api.DefaultConfig())
+	if err != nil {
+		t.Error(err)
+	}
+
+	kv := client.KV()
+	_, err = kv.Delete(prefix+file, nil)
+	if err != nil {
+		t.Error(err)
+	}
+}
