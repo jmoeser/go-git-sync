@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/go-git/go-git/v5"
+	"github.com/go-git/go-git/v5/plumbing"
 	"github.com/rs/zerolog/log"
 )
 
@@ -19,7 +20,7 @@ func GetTempDir() string {
 	return dir
 }
 
-func Checkout(url string, checkoutDir string) (string, string, error) {
+func Checkout(url string, revision string, checkoutDir string) (string, string, error) {
 
 	// https://pkg.go.dev/github.com/go-git/go-git/v5?tab=doc#CloneOptions
 	r, err := git.PlainClone(checkoutDir, false, &git.CloneOptions{
@@ -34,6 +35,25 @@ func Checkout(url string, checkoutDir string) (string, string, error) {
 	}
 
 	ref, err := r.Head()
+	if err != nil {
+		log.Error().Err(err)
+	}
+	log.Debug().Msgf("Checked out %s", ref.Hash())
+
+	w, err := r.Worktree()
+	if err != nil {
+		log.Error().Err(err)
+	}
+
+	log.Debug().Msgf("git checkout %s", revision)
+	err = w.Checkout(&git.CheckoutOptions{
+		Hash: plumbing.NewHash(revision),
+	})
+	if err != nil {
+		log.Error().Err(err)
+	}
+
+	ref, err = r.Head()
 	if err != nil {
 		log.Error().Err(err)
 	}

@@ -14,7 +14,7 @@ func TestCheckout(t *testing.T) {
 	dir := git.GetTempDir()
 	defer os.RemoveAll(dir)
 
-	checkedOutDir, _, err := git.Checkout("https://github.com/jmoeser/terraform-modules", dir)
+	checkedOutDir, _, err := git.Checkout("https://github.com/jmoeser/terraform-modules", "master", dir)
 	if err != nil {
 		t.Error(err)
 	}

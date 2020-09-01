@@ -13,8 +13,9 @@ func TestRunConsulSync(t *testing.T) {
 	source := "https://github.com/jmoeser/go-git-sync.git"
 	file := "example/consul/sample-json.json"
 	consul := "127.0.0.1:8500"
+	revision := "master"
 
-	err := api.RunConsulSync(source, file, consul, "")
+	err := api.RunConsulSync(source, file, consul, "", revision)
 	if err != nil {
 		t.Error(err)
 	}
@@ -36,8 +37,9 @@ func TestRunConsulSyncWithPrefix(t *testing.T) {
 	file := "example/consul/sample-json.json"
 	consul := "127.0.0.1:8500"
 	prefix := "test"
+	revision := "master"
 
-	err := api.RunConsulSync(source, file, consul, prefix)
+	err := api.RunConsulSync(source, file, consul, prefix, revision)
 	if err != nil {
 		t.Error(err)
 	}
@@ -59,8 +61,9 @@ func TestRunConsulSyncWithDirectory(t *testing.T) {
 	file := "example/consul"
 	consul := "127.0.0.1:8500"
 	prefix := "test"
+	revision := "master"
 
-	err := api.RunConsulSync(source, file, consul, prefix)
+	err := api.RunConsulSync(source, file, consul, prefix, revision)
 	if err != nil {
 		t.Error(err)
 	}

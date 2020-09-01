@@ -11,7 +11,7 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-func RunConsulSync(source string, filePath string, consulServer string, destinationPrefix string) error {
+func RunConsulSync(source string, filePath string, consulServer string, destinationPrefix string, revision string) error {
 	log.Debug().Msgf("Begin Consul sync with server %s from file path %s in source repo %s to Consul", consulServer, filePath, source)
 	if destinationPrefix != "" {
 		log.Debug().Msgf("Will sync to prefix %s", destinationPrefix)
@@ -20,7 +20,7 @@ func RunConsulSync(source string, filePath string, consulServer string, destinat
 	dir := git.GetTempDir()
 	defer os.RemoveAll(dir)
 
-	checkedOutDir, headHash, err := git.Checkout(source, dir)
+	checkedOutDir, headHash, err := git.Checkout(source, revision, dir)
 	if err != nil {
 		log.Fatal().Err(err)
 		return err

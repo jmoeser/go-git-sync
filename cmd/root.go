@@ -30,12 +30,12 @@ var cfgFile string
 var rootCmd = &cobra.Command{
 	Use:   "go-git-sync",
 	Short: "A simple application for syncing from Git via a custom command",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
+	Long: `To sync the file example/consul/sample-json.json from the repo https://github.com/jmoeser/go-git-sync.git
+to the Consul server at address 127.0.0.1:8500:
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+go-git-sync -c 127.0.0.1:8500 sync -s https://github.com/jmoeser/go-git-sync.git -f example/consul/sample-json.json
+`,
+	// Args: cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {
 			err := cmd.Help()
@@ -58,6 +58,7 @@ func Execute() {
 }
 
 func init() {
+
 	cobra.OnInitialize(initConfig)
 
 	// Here you will define your flags and configuration settings.
@@ -65,6 +66,14 @@ func init() {
 	// will be global for your application.
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file")
+
+	rootCmd.PersistentFlags().StringP("consul", "c", "", "Consul server address")
+	err := viper.BindPFlag("consul", rootCmd.PersistentFlags().Lookup("consul"))
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
 }
 
 // initConfig reads in config file and ENV variables if set.
