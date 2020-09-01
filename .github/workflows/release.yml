@@ -19,8 +19,18 @@ jobs:
         with:
           go-version: '1.15.0'
 
-      - name: Run build
-        run: go build .
+      - name: Run build - Linux
+        run: go build . -o go-git-sync-linux-amd64
+
+      - name: Run build - Windows
+        run: go build . -o go-git-sync-windows-amd64.exe
+        env:
+          GOOS: windows
+
+      - name: Run build - Mac
+        run: go build . -o go-git-sync-darwin-amd64
+        env:
+          GOOS: darwin
 
       - name: Create Release
         id: create_release
@@ -33,13 +43,35 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Upload Release Asset
+      - name: Upload Release Asset Linux AMD64
         id: upload-release-asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./go-git-sync
-          asset_name: go-git-sync
+          asset_path: ./go-git-sync-linux-amd64
+          asset_name: go-git-sync-linux-amd64
+          asset_content_type: application/octet-stream
+
+      - name: Upload Release Asset Windows AMD64
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./go-git-sync-windows-amd64.exe
+          asset_name: go-git-sync-windows-amd64.exe
+          asset_content_type: application/octet-stream
+
+      - name: Upload Release Asset Darwin AMD64
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./go-git-sync-darwin-amd64
+          asset_name: go-git-sync-darwin-amd64
           asset_content_type: application/octet-stream
