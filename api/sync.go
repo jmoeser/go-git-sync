@@ -15,12 +15,25 @@ import (
 
 func StartSyncLoop(source string, filePath string, consulServer string, destinationPrefix string, revision string) {
 
+	previousRevision := ""
+
 	for {
 		log.Debug().Msgf("Started sync loop")
 
-		if err := RunConsulSync(source, filePath, consulServer, destinationPrefix, revision); err != nil {
+		revision, err := git.GetRevisionHash(source, revision)
+		if err != nil {
 			log.Error().Err(err)
 			os.Exit(1)
+		}
+
+		if revision != previousRevision {
+
+			if err = RunConsulSync(source, filePath, consulServer, destinationPrefix, revision); err != nil {
+				log.Error().Err(err)
+				os.Exit(1)
+			}
+
+			previousRevision = revision
 		}
 
 		Nsecs := rand.Intn(30000)

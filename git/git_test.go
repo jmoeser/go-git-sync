@@ -33,3 +33,10 @@ func TestCheckout(t *testing.T) {
 		t.Errorf("README does not contain expected text")
 	}
 }
+
+func TestGetRevisionHash(t *testing.T) {
+	_, err := git.GetRevisionHash("https://github.com/jmoeser/terraform-modules", "master")
+	if err != nil {
+		t.Error(err)
+	}
+}
