@@ -17,6 +17,7 @@ package main
 
 import (
 	"os"
+	"os/signal"
 
 	"github.com/rs/zerolog/log"
 
@@ -25,8 +26,33 @@ import (
 )
 
 func main() {
+
 	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
 	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stdout})
+
+	sigs := make(chan os.Signal, 1)
+
+	signal.Notify(sigs)
+
+	go func() {
+		for {
+			// select {
+			// case s := <-sigs:
+			// 	switch s {
+			// 	case os.Interrupt:
+			// 		log.Debug().Msgf("RECEIVED SIGNAL: %s", s)
+			// 		os.Exit(1)
+			// 	}
+			// }
+			for s := range sigs {
+				if s == os.Interrupt {
+					log.Debug().Msgf("RECEIVED SIGNAL: %s", s)
+					os.Exit(1)
+				}
+
+			}
+		}
+	}()
 
 	cmd.Execute()
 }

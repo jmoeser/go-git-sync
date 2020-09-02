@@ -52,9 +52,7 @@ var syncCmd = &cobra.Command{
 
 		log.Debug().Msgf("Consul server: %s", consulServer)
 
-		if err := api.RunConsulSync(source, filePath, consulServer, destinationPrefix, revision); err != nil {
-			log.Error().Err(err)
-		}
+		api.StartSyncLoop(source, filePath, consulServer, destinationPrefix, revision)
 	},
 }
 
