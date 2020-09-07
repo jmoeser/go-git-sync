@@ -74,6 +74,13 @@ func init() {
 		os.Exit(1)
 	}
 
+	rootCmd.PersistentFlags().IntP("port", "p", 8080, "Listen on given port")
+	err = viper.BindPFlag("port", rootCmd.PersistentFlags().Lookup("port"))
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
 }
 
 // initConfig reads in config file and ENV variables if set.

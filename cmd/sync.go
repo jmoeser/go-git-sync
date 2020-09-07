@@ -16,10 +16,12 @@ limitations under the License.
 package cmd
 
 import (
+	"context"
 	"fmt"
 	"os"
 
 	"github.com/jmoeser/go-git-sync/api"
+	"github.com/jmoeser/go-git-sync/server"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -52,7 +54,23 @@ var syncCmd = &cobra.Command{
 
 		log.Debug().Msgf("Consul server: %s", consulServer)
 
-		api.StartSyncLoop(source, filePath, consulServer, destinationPrefix, revision)
+		httpPort := viper.GetInt("port")
+		log.Debug().Msgf("Starting on port %d", httpPort)
+
+		serverOpts := server.GoGitSyncServerOptions{
+			ConsulHost: consulServer,
+		}
+
+		go api.StartSyncLoop(source, filePath, consulServer, destinationPrefix, revision)
+
+		for {
+			ctx := context.Background()
+			ctx, cancel := context.WithCancel(ctx)
+			goGitSyncServer := server.NewServer(ctx, serverOpts)
+			goGitSyncServer.Run(ctx, httpPort, 8181)
+			cancel()
+		}
+
 	},
 }
 
@@ -63,7 +81,7 @@ func init() {
 
 	syncCmd.Flags().StringVarP(&source, "source", "s", "", "Source Git URL")
 	syncCmd.Flags().StringVarP(&filePath, "file", "f", "", "File path in the Git repo")
-	syncCmd.Flags().StringVarP(&destinationPrefix, "prefix", "p", "", "Prefix of the path to sync to in Consul")
+	syncCmd.Flags().StringVarP(&destinationPrefix, "prefix", "", "", "Prefix of the path to sync to in Consul")
 	syncCmd.Flags().StringVarP(&revision, "revision", "r", defaultRevision, "Revision to check out, defaults to `master`")
 
 	err := syncCmd.MarkFlagRequired("source")

@@ -36,9 +36,9 @@ func StartSyncLoop(source string, filePath string, consulServer string, destinat
 			previousRevision = revision
 		}
 
-		Nsecs := rand.Intn(30000)
-		log.Debug().Msgf("About to sleep %dms before looping again", Nsecs)
-		time.Sleep(time.Millisecond * time.Duration(Nsecs))
+		secs := rand.Intn(300-180) + 180
+		log.Debug().Msgf("About to sleep %ds before looping again", secs)
+		time.Sleep(time.Second * time.Duration(secs))
 
 	}
 

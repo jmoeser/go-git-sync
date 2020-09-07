@@ -36,14 +36,6 @@ func main() {
 
 	go func() {
 		for {
-			// select {
-			// case s := <-sigs:
-			// 	switch s {
-			// 	case os.Interrupt:
-			// 		log.Debug().Msgf("RECEIVED SIGNAL: %s", s)
-			// 		os.Exit(1)
-			// 	}
-			// }
 			for s := range sigs {
 				if s == os.Interrupt {
 					log.Debug().Msgf("RECEIVED SIGNAL: %s", s)
