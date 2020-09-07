@@ -16,7 +16,6 @@ limitations under the License.
 package cmd
 
 import (
-	"context"
 	"fmt"
 	"os"
 
@@ -63,13 +62,8 @@ var syncCmd = &cobra.Command{
 
 		go api.StartSyncLoop(source, filePath, consulServer, destinationPrefix, revision)
 
-		for {
-			ctx := context.Background()
-			ctx, cancel := context.WithCancel(ctx)
-			goGitSyncServer := server.NewServer(ctx, serverOpts)
-			goGitSyncServer.Run(ctx, httpPort, 8181)
-			cancel()
-		}
+		goGitSyncServer := server.NewServer(serverOpts)
+		goGitSyncServer.Run(httpPort, 8181)
 
 	},
 }

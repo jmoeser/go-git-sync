@@ -84,7 +84,7 @@ func RunConsulSync(source string, filePath string, consulServer string, destinat
 		}
 	}
 
-	log.Debug().Msg("Sync operation completed successfully")
+	log.Info().Msgf("Sync operation completed successfully to revision %s", headHash)
 
 	return nil
 }
