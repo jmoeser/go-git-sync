@@ -81,6 +81,13 @@ func init() {
 		os.Exit(1)
 	}
 
+	rootCmd.PersistentFlags().StringP("webhook-secret", "w", "", "Webhook Secret to validate webhook requests from Github")
+	err = viper.BindPFlag("webhook-secret", rootCmd.PersistentFlags().Lookup("webhook-secret"))
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
 }
 
 // initConfig reads in config file and ENV variables if set.

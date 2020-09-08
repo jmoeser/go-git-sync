@@ -8,7 +8,9 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/google/go-github/v32/github"
 	"github.com/rs/zerolog/log"
+	"github.com/spf13/viper"
 )
 
 type GoGitSyncServer struct {
@@ -30,7 +32,12 @@ func (a *GoGitSyncServer) Run(port int, metricsPort int) {
 
 	log.Info().Msgf("Go Git Sync server started on port %d", port)
 
-	http.HandleFunc("/heartbeat", heartbeat)
+	http.HandleFunc("/heartbeat", heartbeatHandler)
+	webhookSecret := viper.GetString("webhook-secret")
+	if webhookSecret != "" {
+		log.Info().Msg("Got webhook secret, enabling webhook handler")
+		http.HandleFunc("/webhook", webhookHandler)
+	}
 
 	err := http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
 	if err != nil {
@@ -40,7 +47,7 @@ func (a *GoGitSyncServer) Run(port int, metricsPort int) {
 
 }
 
-func heartbeat(w http.ResponseWriter, req *http.Request) {
+func heartbeatHandler(w http.ResponseWriter, req *http.Request) {
 
 	now := time.Now()
 	unixTimestamp := strconv.FormatInt(now.Unix(), 10)
@@ -59,4 +66,34 @@ func heartbeat(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+}
+
+func webhookHandler(w http.ResponseWriter, req *http.Request) {
+
+	if req.Method == "POST" {
+		payload, err := github.ValidatePayload(req, []byte(viper.GetString("webhook-secret")))
+		if err != nil {
+			log.Error().Msgf("Error validating webhook: %s", err)
+			return
+		}
+		defer req.Body.Close()
+
+		event, err := github.ParseWebHook(github.WebHookType(req), payload)
+		if err != nil {
+			log.Error().Msgf("Could not parse webhook: %s", err)
+			return
+		}
+
+		switch e := event.(type) {
+		case *github.PushEvent:
+			log.Debug().Msgf("%s", payload)
+			log.Debug().Msgf("%s", e)
+		default:
+			log.Printf("unknown event type %s\n", github.WebHookType(req))
+			return
+		}
+
+	} else {
+		http.Error(w, "Invalid request method.", 405)
+	}
 }

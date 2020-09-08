@@ -22,12 +22,12 @@ func TestPublishKV(t *testing.T) {
 
 	err = consul.PublishKV(test_key, marshal_data)
 	if err != nil {
-		t.Error(err)
+		t.Fatal(err)
 	}
 
 	client, err := consul_api.NewClient(consul_api.DefaultConfig())
 	if err != nil {
-		t.Error(err)
+		t.Fatal(err)
 	}
 
 	kv := client.KV()

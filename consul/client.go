@@ -13,7 +13,7 @@ func getClient(config *consul_api.Config) (*consul_api.Client, error) {
 		return nil, err
 	}
 
-	log.Debug().Msg("Connected to Consul...")
+	log.Debug().Msg("Got Consul client")
 
 	return client, err
 }
