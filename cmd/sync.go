@@ -60,7 +60,10 @@ var syncCmd = &cobra.Command{
 			ConsulHost: consulServer,
 		}
 
-		go api.StartSyncLoop(source, filePath, consulServer, destinationPrefix, revision)
+		if viper.GetString("webhook-secret") == "" {
+			log.Debug().Msg("Didn't get a webhook secret, starting polling server")
+			go api.StartSyncLoop(source, filePath, consulServer, destinationPrefix, revision)
+		}
 
 		goGitSyncServer := server.NewServer(serverOpts)
 		goGitSyncServer.Run(httpPort, 8181)

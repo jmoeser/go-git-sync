@@ -32,11 +32,12 @@ func (a *GoGitSyncServer) Run(port int, metricsPort int) {
 
 	log.Info().Msgf("Go Git Sync server started on port %d", port)
 
-	http.HandleFunc("/heartbeat", heartbeatHandler)
+	http.HandleFunc("/heartbeat", a.heartbeatHandler)
+
 	webhookSecret := viper.GetString("webhook-secret")
 	if webhookSecret != "" {
 		log.Info().Msg("Got webhook secret, enabling webhook handler")
-		http.HandleFunc("/webhook", webhookHandler)
+		http.HandleFunc("/webhook", a.webhookHandler)
 	}
 
 	err := http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
@@ -47,7 +48,7 @@ func (a *GoGitSyncServer) Run(port int, metricsPort int) {
 
 }
 
-func heartbeatHandler(w http.ResponseWriter, req *http.Request) {
+func (a *GoGitSyncServer) heartbeatHandler(w http.ResponseWriter, req *http.Request) {
 
 	now := time.Now()
 	unixTimestamp := strconv.FormatInt(now.Unix(), 10)
@@ -68,7 +69,7 @@ func heartbeatHandler(w http.ResponseWriter, req *http.Request) {
 
 }
 
-func webhookHandler(w http.ResponseWriter, req *http.Request) {
+func (a *GoGitSyncServer) webhookHandler(w http.ResponseWriter, req *http.Request) {
 
 	if req.Method == "POST" {
 		payload, err := github.ValidatePayload(req, []byte(viper.GetString("webhook-secret")))
@@ -86,8 +87,12 @@ func webhookHandler(w http.ResponseWriter, req *http.Request) {
 
 		switch e := event.(type) {
 		case *github.PushEvent:
-			log.Debug().Msgf("%s", payload)
-			log.Debug().Msgf("%s", e)
+			revision := *e.After
+			repoUrl := *e.Repo.HTMLURL
+			pusher := *e.Pusher.Name
+			log.Info().Msgf("Got push event from webhook, repo %s, hash %s, push by %s", repoUrl, revision, pusher)
+			log.Debug().Msgf("Will sync to %s", a.GoGitSyncServerOptions.ConsulHost)
+			// api.RunConsulSync(repoUrl, filePath, consulServer, destinationPrefix, revision)
 		default:
 			log.Printf("unknown event type %s\n", github.WebHookType(req))
 			return
