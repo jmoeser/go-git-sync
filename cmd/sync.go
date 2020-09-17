@@ -26,11 +26,6 @@ import (
 	"github.com/spf13/viper"
 )
 
-var source string
-var filePath string
-var destinationPrefix string
-var revision string
-
 // syncCmd represents the sync command
 var syncCmd = &cobra.Command{
 	Use:   "sync",
@@ -60,6 +55,35 @@ var syncCmd = &cobra.Command{
 			ConsulHost: consulServer,
 		}
 
+		source := viper.GetString("source")
+		if source == "" {
+			log.Error().Msg("Source repo missing")
+
+			err := rootCmd.Help()
+			if err != nil {
+				fmt.Println(err)
+				os.Exit(1)
+			}
+
+			os.Exit(1)
+		}
+
+		filePath := viper.GetString("file")
+		if filePath == "" {
+			log.Error().Msg("File path in source repo missing")
+
+			err := rootCmd.Help()
+			if err != nil {
+				fmt.Println(err)
+				os.Exit(1)
+			}
+
+			os.Exit(1)
+		}
+
+		destinationPrefix := viper.GetString("prefix")
+		revision := viper.GetString("revision")
+
 		if viper.GetString("webhook-secret") == "" {
 			log.Info().Msg("Didn't get a webhook secret, starting polling server")
 			go api.StartSyncLoop(source, filePath, consulServer, destinationPrefix, revision)
@@ -76,18 +100,32 @@ func init() {
 
 	defaultRevision := "master"
 
-	syncCmd.Flags().StringVarP(&source, "source", "s", "", "Source Git URL")
-	syncCmd.Flags().StringVarP(&filePath, "file", "f", "", "File path in the Git repo")
-	syncCmd.Flags().StringVarP(&destinationPrefix, "prefix", "", "", "Prefix of the path to sync to in Consul")
-	syncCmd.Flags().StringVarP(&revision, "revision", "r", defaultRevision, "Revision to check out, defaults to `master`")
-
-	err := syncCmd.MarkFlagRequired("source")
+	syncCmd.Flags().StringP("source", "s", "", "Source Git URL")
+	err := viper.BindPFlag("source", syncCmd.Flags().Lookup("source"))
 	if err != nil {
-		log.Error().Err(err)
+		fmt.Println(err)
+		os.Exit(1)
 	}
-	err = syncCmd.MarkFlagRequired("file")
+
+	syncCmd.Flags().StringP("file", "f", "", "File path in the Git repo")
+	err = viper.BindPFlag("file", syncCmd.Flags().Lookup("file"))
 	if err != nil {
-		log.Error().Err(err)
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	syncCmd.Flags().StringP("prefix", "", "", "Prefix of the path to sync to in Consul")
+	err = viper.BindPFlag("prefix", syncCmd.Flags().Lookup("prefix"))
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	syncCmd.Flags().StringP("revision", "r", defaultRevision, "Revision to check out, defaults to `master`")
+	err = viper.BindPFlag("revision", syncCmd.Flags().Lookup("revision"))
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
 	}
 
 }

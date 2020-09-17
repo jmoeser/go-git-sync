@@ -42,6 +42,25 @@ Changes to these files pushed to Git will update the values as they are in Consu
 
 Currently the application will poll Git for changes every 3-5 minutes.
 
+### Config file
+
+Config files are supported you can pass in all the values in the config file instead of passing them in as arguments.
+
+```
+$ go-git-sync --config example/config.yaml sync
+```
+
+### Environment variables
+
+Instead of using a config file or command arguments you can use environment variables, just prefix them with `GGS_`. For example:
+
+```
+$ export GGS_FILE=example/consul/sample-json.json
+$ export GGS_SOURCE=https://github.com/jmoeser/go-git-sync.git
+$ export GGS_CONSUL="127.0.0.1:8500"
+$ go-git-sync sync
+```
+
 To Do:
 
 - Github Webhooks so we don't need to poll
