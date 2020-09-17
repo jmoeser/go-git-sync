@@ -18,9 +18,11 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"strings"
 
+	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
-
 	"github.com/spf13/viper"
 )
 
@@ -35,6 +37,16 @@ to the Consul server at address 127.0.0.1:8500:
 
 go-git-sync -c 127.0.0.1:8500 sync -s https://github.com/jmoeser/go-git-sync.git -f example/consul/sample-json.json
 `,
+
+	PersistentPreRun: func(cmd *cobra.Command, args []string) {
+		zerolog.SetGlobalLevel(zerolog.InfoLevel)
+		if viper.GetBool("debug") {
+			zerolog.SetGlobalLevel(zerolog.DebugLevel)
+			log.Debug().Msg("Debug logging enabled")
+		}
+
+	},
+
 	// Args: cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {
@@ -45,6 +57,7 @@ go-git-sync -c 127.0.0.1:8500 sync -s https://github.com/jmoeser/go-git-sync.git
 			}
 			os.Exit(0)
 		}
+
 	},
 }
 
@@ -67,8 +80,15 @@ func init() {
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file")
 
+	rootCmd.PersistentFlags().BoolP("debug", "d", false, "Set logging to debug level")
+	err := viper.BindPFlag("debug", rootCmd.PersistentFlags().Lookup("debug"))
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
 	rootCmd.PersistentFlags().StringP("consul", "c", "", "Consul server address")
-	err := viper.BindPFlag("consul", rootCmd.PersistentFlags().Lookup("consul"))
+	err = viper.BindPFlag("consul", rootCmd.PersistentFlags().Lookup("consul"))
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
@@ -97,6 +117,8 @@ func initConfig() {
 		viper.SetConfigFile(cfgFile)
 	}
 
+	viper.SetEnvPrefix("GGS")
+	viper.SetEnvKeyReplacer(strings.NewReplacer("-", "_"))
 	viper.AutomaticEnv() // read in environment variables that match
 
 	// If a config file is found, read it in.
