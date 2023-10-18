@@ -1,6 +1,6 @@
 module github.com/jmoeser/go-git-sync
 
-go 1.18
+go 1.21
 
 require (
 	github.com/go-git/go-git/v5 v5.9.0
