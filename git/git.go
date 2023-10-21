@@ -11,7 +11,7 @@ import (
 )
 
 func GetTempDir() string {
-	dir, err := os.MkdirTemp(os.TempDir, "-git-sync"))
+	dir, err := os.MkdirTemp(os.TempDir(), "-git-sync")
 	if err != nil {
 		log.Error().Err(err)
 	}
