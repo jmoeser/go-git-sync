@@ -1,7 +1,6 @@
 package git
 
 import (
-	"io/ioutil"
 	"os"
 
 	"github.com/go-git/go-git/v5"
@@ -12,7 +11,7 @@ import (
 )
 
 func GetTempDir() string {
-	dir, err := ioutil.TempDir(os.TempDir(), "go-git-sync-")
+	dir, err := os.MkdirTemp(os.TempDir, "-git-sync"))
 	if err != nil {
 		log.Error().Err(err)
 	}
