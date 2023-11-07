@@ -3,7 +3,7 @@ module github.com/jmoeser/go-git-sync
 go 1.21
 
 require (
-	github.com/go-git/go-git/v5 v5.9.0
+	github.com/go-git/go-git/v5 v5.10.0
 	github.com/google/go-github/v32 v32.1.0
 	github.com/hashicorp/consul/api v1.26.1
 	github.com/mattn/go-sqlite3 v1.14.18
