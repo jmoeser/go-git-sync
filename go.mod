@@ -9,7 +9,7 @@ require (
 	github.com/mattn/go-sqlite3 v1.14.19
 	github.com/rs/zerolog v1.31.0
 	github.com/spf13/cobra v1.8.0
-	github.com/spf13/viper v1.18.1
+	github.com/spf13/viper v1.18.2
 	gopkg.in/yaml.v2 v2.4.0
 )
 
