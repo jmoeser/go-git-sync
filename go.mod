@@ -7,7 +7,7 @@ require (
 	github.com/google/go-github/v32 v32.1.0
 	github.com/hashicorp/consul/api v1.28.3
 	github.com/mattn/go-sqlite3 v1.14.22
-	github.com/rs/zerolog v1.32.0
+	github.com/rs/zerolog v1.33.0
 	github.com/spf13/cobra v1.8.0
 	github.com/spf13/viper v1.19.0
 	gopkg.in/yaml.v2 v2.4.0
