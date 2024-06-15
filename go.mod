@@ -5,7 +5,7 @@ go 1.21
 require (
 	github.com/go-git/go-git/v5 v5.12.0
 	github.com/google/go-github/v32 v32.1.0
-	github.com/hashicorp/consul/api v1.28.3
+	github.com/hashicorp/consul/api v1.29.1
 	github.com/mattn/go-sqlite3 v1.14.22
 	github.com/rs/zerolog v1.32.0
 	github.com/spf13/cobra v1.8.0
@@ -27,7 +27,6 @@ require (
 	github.com/go-git/go-billy/v5 v5.5.0 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
-	github.com/hashicorp/consul/proto-public v0.6.1 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-cleanhttp v0.5.2 // indirect
 	github.com/hashicorp/go-hclog v1.5.0 // indirect
