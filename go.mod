@@ -8,7 +8,7 @@ require (
 	github.com/hashicorp/consul/api v1.29.1
 	github.com/mattn/go-sqlite3 v1.14.22
 	github.com/rs/zerolog v1.33.0
-	github.com/spf13/cobra v1.8.0
+	github.com/spf13/cobra v1.8.1
 	github.com/spf13/viper v1.19.0
 	gopkg.in/yaml.v2 v2.4.0
 )
